@@ -1,6 +1,6 @@
 name: Sync and merge upstream repository with your current repository
-description: Syncs and merges your current repository with the upstream repository. Fork of https://github.com/mheene/sync-upstream-repo.
-author: Dabreadman
+description: Syncs and merges your current repository with the upstream repository. Fork of https://github.com/Dabreadman/sync-upstream-repo.
+author: verticalsync
 
 inputs:
   upstream_repo:
@@ -33,6 +33,11 @@ inputs:
     description: Toggle to spawn `sync-upstream-repo` with time logs
     required: true
     default: false
+
+outputs:
+  result:
+    description: Result of the sync process
+    value: ${{ steps.merge.outputs.result }}
 
 runs:
   using: "docker"
