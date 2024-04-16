@@ -57,28 +57,20 @@ git push origin
 
 MERGE_RESULT=$(git merge ${MERGE_ARGS} upstream/${UPSTREAM_BRANCH})
 
+if git diff --name-only --diff-filter=U | grep -q .; then
+  echo "There are conflicts in the merge. Please resolve them." > "${GITHUB_ENV}"
+  exit 1
+fi
 
 if [[ $MERGE_RESULT == "" ]]; then
-  echo "::set-output name=result::Merge failed: $MERGE_RESULT"
+  echo "Merge failed: $MERGE_RESULT" > "${GITHUB_ENV}"
   exit 1
+elif [[ $MERGE_RESULT == *"Already up to date." ]]; then
+  echo "Everything is already up to date." > "${GITHUB_ENV}"
 elif [[ $MERGE_RESULT != *"Already up to date." ]]; then
   git commit -m "Merged upstream"
   git push ${PUSH_ARGS} origin ${DOWNSTREAM_BRANCH} || exit $?
-  echo "Merged everything successfully"
-  echo "::set-output name=result::Merged everything successfully"
-elif [[ $MERGE_RESULT == *"Already up to date." ]]; then
-  echo "Everything is already up to date."
-  echo "::set-output name=result::Everything is already up to date"
-else
-  if git diff --name-only --diff-filter=U | grep -q .; then
-    echo "There are conflicts in the merge. Please resolve them."
-    echo "::set-output name=result::Merge failed: Conflicts in merge"
-    exit 1
-  fi
-  
-  echo "Unknown merge result, please check above for any issues."
-  echo "::set-output name=result::Merge failed: Unknown result"
-  exit 1
+  echo "Merged everything successfully" > "${GITHUB_ENV}"
 fi
 
 cd ..
