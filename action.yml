@@ -29,10 +29,6 @@ inputs:
     description: Git push arguments
     required: false
     default: ""
-  spawn_logs: 
-    description: Toggle to spawn `sync-upstream-repo` with time logs
-    required: true
-    default: false
 
 outputs:
   result:
@@ -50,7 +46,6 @@ runs:
     - ${{ inputs.fetch_args }}
     - ${{ inputs.merge_args }}
     - ${{ inputs.push_args }}
-    - ${{ inputs.spawn_logs }}
 
 branding:
   icon: "git-merge"
