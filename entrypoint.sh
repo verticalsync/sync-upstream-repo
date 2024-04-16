@@ -64,10 +64,11 @@ if [[ $MERGE_RESULT == "" ]]; then
 elif [[ $MERGE_RESULT != *"Already up to date." ]]; then
   git commit -m "Merged upstream"
   git push ${PUSH_ARGS} origin ${DOWNSTREAM_BRANCH} || exit $?
+  echo "Merged everything successfully"
   echo "::set-output name=result::Merged everything successfully"
 elif [[ $MERGE_RESULT == *"Already up to date." ]]; then
-  echo "Everything already up to date."
-  exit 1
+  echo "Everything is already up to date."
+  echo "::set-output name=result::Everything is already up to date"
 else
   if git diff --name-only --diff-filter=U | grep -q .; then
     echo "There are conflicts in the merge. Please resolve them."
