@@ -59,15 +59,22 @@ MERGE_RESULT=$(git merge ${MERGE_ARGS} upstream/${UPSTREAM_BRANCH})
 
 
 if [[ $MERGE_RESULT == "" ]]; then
+  echo "::set-output name=result::Merge failed: $MERGE_RESULT"
   exit 1
 elif [[ $MERGE_RESULT != *"Already up to date." ]]; then
   if git diff --name-only --diff-filter=U | grep -q .; then
     echo "There are conflicts in the merge. Please resolve them."
+    echo "::set-output name=result::Merge failed: Conflicts in merge"
     exit 1
   else
     git commit -m "Merged upstream"
     git push ${PUSH_ARGS} origin ${DOWNSTREAM_BRANCH} || exit $?
+    echo "::set-output name=result::Merge successful"
   fi
+else
+  echo "Unknown merge result, please check above for any issues."
+  echo "::set-output name=result::Merge failed: Unknown result"
+  exit 1
 fi
 
 cd ..
