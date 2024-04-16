@@ -58,19 +58,19 @@ git push origin
 MERGE_RESULT=$(git merge ${MERGE_ARGS} upstream/${UPSTREAM_BRANCH})
 
 if git diff --name-only --diff-filter=U | grep -q .; then
-  echo "There are conflicts in the merge. Please resolve them." > "$GITHUB_ENV"
+  echo "There are conflicts in the merge. Please resolve them." >&2
   exit 1
 fi
 
 if [[ $MERGE_RESULT == "" ]]; then
-  echo "Merge failed: $MERGE_RESULT" > "$GITHUB_ENV"
+  echo "Merge failed: $MERGE_RESULT" >&2
   exit 1
 elif [[ $MERGE_RESULT == *"Already up to date." ]]; then
-  echo "Everything is already up to date." > "$GITHUB_ENV"
+  echo "Everything is already up to date." >&2
 elif [[ $MERGE_RESULT != *"Already up to date." ]]; then
   git commit -m "Merged upstream"
   git push ${PUSH_ARGS} origin ${DOWNSTREAM_BRANCH} || exit $?
-  echo "Merged everything successfully" > "$GITHUB_ENV"
+  echo "Merged everything successfully" >&2
 fi
 
 cd ..
