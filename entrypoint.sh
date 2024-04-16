@@ -57,7 +57,7 @@ git push origin
 
 MERGE_RESULT=$(git merge ${MERGE_ARGS} upstream/${UPSTREAM_BRANCH})
 
-echo '# Summary\n' > $GITHUB_STEP_SUMMARY
+echo '# Summary' > $GITHUB_STEP_SUMMARY
 
 if git diff --name-only --diff-filter=U | grep -q .; then
   echo "## There are conflicts in the merge. Please resolve them." >> $GITHUB_STEP_SUMMARY
