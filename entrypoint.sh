@@ -60,19 +60,19 @@ MERGE_RESULT=$(git merge ${MERGE_ARGS} upstream/${UPSTREAM_BRANCH})
 echo '# Summary\n' > $GITHUB_STEP_SUMMARY
 
 if git diff --name-only --diff-filter=U | grep -q .; then
-  echo "## There are conflicts in the merge. Please resolve them." > $GITHUB_STEP_SUMMARY
+  echo "## There are conflicts in the merge. Please resolve them." >> $GITHUB_STEP_SUMMARY
   exit 1
 fi
 
 if [[ $MERGE_RESULT == "" ]]; then
-  echo "## Merge failed: $MERGE_RESULT" > $GITHUB_STEP_SUMMARY
+  echo "## Merge failed: $MERGE_RESULT" >> $GITHUB_STEP_SUMMARY
   exit 1
 elif [[ $MERGE_RESULT == *"Already up to date." ]]; then
-  echo "## Everything is already up to date." > $GITHUB_STEP_SUMMARY
+  echo "## Everything is already up to date." >> $GITHUB_STEP_SUMMARY
 elif [[ $MERGE_RESULT != *"Already up to date." ]]; then
   git commit -m "Merged upstream"
   git push ${PUSH_ARGS} origin ${DOWNSTREAM_BRANCH} || exit $?
-  echo "## Merged everything successfully" > $GITHUB_STEP_SUMMARY
+  echo "## Merged everything successfully" >> $GITHUB_STEP_SUMMARY
 fi
 
 cd ..
